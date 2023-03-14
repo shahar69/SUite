@@ -18,7 +18,7 @@ To use SquiiZZy, simply clone the repository and run the main script:
 
 $bash
 
-	git clone https://github.com/shahar-el/squiiZZy.git
+	git clone https://github.com/shahar69/SUite/
 	cd squiiZZy
 	pip install -r requirements.txt
 	python squiiZZy.py

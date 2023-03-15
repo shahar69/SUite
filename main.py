@@ -17,48 +17,6 @@ def scan(ip):
             lport = nm[host][proto].keys()
             for port in lport:
                 print('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
-                print('\r[', end='')
-                for i in range(1, 101):
-                    print('#', end='')
-                    if i == 100:
-                        print('] 100%')
-                    else:
-                        print(' ', end='')
-                    print('\r[', end='')
-                    for i in range(1, 51):
-                        print('#', end='')
-                        if i == 50:
-                            print('] 50%')
-                        else:
-                            print(' ', end='')
-                        print('\r[', end='')
-                        for i in range(1, 26):
-                            print('#', end='')
-                            if i == 25:
-                                print('] 25%')
-                            else:
-                                print(' ', end='')
-                            print('\r[', end='')
-                            for i in range(1, 11):
-                                print('#', end='')
-                                if i == 10:
-                                    print('] 10%')
-                                else:
-                                    print(' ', end='')
-                                    print('\r[', end='')
-                                    for i in range(1, 6):
-                                        print('#', end='')
-                                        if i == 5:
-                                            print('] 5%')
-                                        else:
-                                            print(' ', end='')
-                                            print('\r[', end='')
-                                            for i in range(1, 2):
-                                                print('#', end='')
-                                                if i == 1:
-                                                    print('] 1%')
-                                                else:
-                                                    print(' ', end='')
 
 
 def dirbust(url):
@@ -74,6 +32,11 @@ def sqlmap(url):
 def nikto(url):
     print("Web server scanning...")
     subprocess.call(['nikto', '-h', url])
+
+
+def nuclei(url):
+    print("Web server scanning...")
+    subprocess.call(['nuclei', '-u', url])
 
 
 def msfvenom():

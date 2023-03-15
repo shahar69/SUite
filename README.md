@@ -1,6 +1,6 @@
 <h2 style="color:#FF5733">Penetration Testing Suite</h2>
 			🕵️ SquiiZZy - Complete Penetration Testing Suite 🕵️
-			**[![Python Package using Conda](https://github.com/shahar69/SUite/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/shahar69/SUite/actions/workflows/python-package-conda.yml)**
+[![Python Package using Conda](https://github.com/shahar69/SUite/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/shahar69/SUite/actions/workflows/python-package-conda.yml)
 
 SquiiZZy is a complete penetration testing suite that allows you to test the security of your web applications and networks. It includes a variety of tools and techniques to help you identify vulnerabilities and assess the level of security of your systems.
 🛠️ Tools Included

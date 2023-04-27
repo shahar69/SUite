@@ -104,7 +104,8 @@ def menu():
         print("5. Generate Metasploit Payload")
         print("6. ARP Spoofing")
         print("7. Man-in-the-Middle Attack")
-        print("8. Exit\n")
+        print("8. Internal Network Monitor")
+        print("9. Exit\n")
         # Get the user's choice
         choice = input("Enter your choice: ")
         # Call the appropriate function based on the user's choice
@@ -124,4 +125,10 @@ def menu():
         elif choice == "7":
             mitm.mitm()
         elif choice == "8":
+            import netmon
+        elif choice == "9":
             exit()
+
+
+if __name__ == "__main__":
+    menu()

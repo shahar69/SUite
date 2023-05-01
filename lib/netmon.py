@@ -69,8 +69,10 @@ def display_devices():
 
 
 # Create a thread to scan the network continuously
-scan_thread = threading.Thread(target=scan_network)
-scan_thread.start()
 
-# Display the devices in real-time
-display_devices()
+def startmonitoring():
+    scan_thread = threading.Thread(target=scan_network)
+    scan_thread.start()
+
+    # Display the devices in real-time
+    display_devices()

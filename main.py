@@ -2,9 +2,19 @@
 import base64
 import os
 import subprocess
+import sys
 import zlib
 import nmap
 import mitm
+from lib.netmon import startmonitoring
+
+from lib.sql_injection import SQLInjection
+
+
+def run_sql_injection(target_url):
+    sql_injection_tester = SQLInjection()
+    result = sql_injection_tester.test_vulnerability(target_url)
+    print(result)
 
 
 # Define function to scan for open ports on a given IP address
@@ -115,7 +125,8 @@ def menu():
         elif choice == '2':
             dirbust()
         elif choice == '3':
-            sqlmap()
+            url = input("Enter URL address to act: ")
+            run_sql_injection(url)
         elif choice == '4':
             nikto()
         elif choice == '5':
@@ -125,7 +136,7 @@ def menu():
         elif choice == "7":
             mitm.mitm()
         elif choice == "8":
-            import netmon
+            startmonitoring()
         elif choice == "9":
             exit()
 

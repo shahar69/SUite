@@ -23,7 +23,7 @@ sudo apt-get install -y ettercap-graphical
 sudo apt-get install -y dirb
 
 # Install mitmproxy
-sudo apt-get install -y mitmproxy
+sudo apt-get install -y python-nmap
 
 # Clone the repository
 git clone https://github.com/shahar69/SUite.git
@@ -33,10 +33,11 @@ cd SUite
 
 # Install necessary Python modules
 sudo pip3 install scapy
-sudo pip3 install
-sudo pip3 install
-sudo pip3 install
-sudo pip3 install
+sudo pip3 install base64
+sudo pip3 install zlib
+sudo pip3 install prettytable
+sudo pip3 install colorama
+sudo pip3 install argparse
 
 
 # Set execute permissions for the Python files

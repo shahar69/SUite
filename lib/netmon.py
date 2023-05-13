@@ -1,10 +1,8 @@
-import threading
-import time
-import nmap
 import argparse
-from scapy.all import *
-from prettytable import PrettyTable
+import nmap
 from colorama import Fore, Style
+from prettytable import PrettyTable
+from scapy.all import *
 from scapy.layers.l2 import ARP, Ether
 
 # Define the network to scan
@@ -25,10 +23,9 @@ def scan_network():
     # Create an ARP request packet
     arp = ARP(pdst=network)
     ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-    Packet1 = ether / arp
-
+    packet1 = ether / arp
     # Send the packet and get the response
-    result = srp(Packet1, timeout=args.timeout, verbose=0)[0]
+    result = srp(packet1, timeout=args.timeout, verbose=0)[0]
 
     # Update the devices dictionary with the response
     for sent, received in result:
@@ -56,9 +53,9 @@ def display_devices():
         # Add the devices to the table
         for ip, info in devices.items():
             mac = info["mac"]
-            os = info.get("os", "")
+            ostype = info.get("os", "")
             ports = ", ".join([f"{k} ({v})" for k, v in info.items() if k.startswith("port")])
-            table.add_row([Fore.GREEN + ip + Style.RESET_ALL, Fore.YELLOW + mac + Style.RESET_ALL, os, ports])
+            table.add_row([Fore.GREEN + ip + Style.RESET_ALL, Fore.YELLOW + mac + Style.RESET_ALL, ostype, ports])
 
         # Clear the screen and display the table
         print("\033[H\033[J")

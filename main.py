@@ -121,7 +121,7 @@ def menu():
         elif choice == "6":
             arp()
         elif choice == "7":
-            mitm.mitm()
+            mitm.run()
         elif choice == "8":
             startmonitoring()
         elif choice == "9":

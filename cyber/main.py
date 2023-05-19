@@ -6,7 +6,6 @@ import zlib
 import nmap
 import mitm
 from lib.netmon import startmonitoring
-
 from lib.sql_injection import SQLInjection
 
 

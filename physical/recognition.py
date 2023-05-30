@@ -1,47 +1,19 @@
 import cv2
-import imutils
-import numpy as np
+from picamera2 import Picamera2
 
-# Initialize the camera
-camera = cv2.VideoCapture(0)
-camera.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
-camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+face_detector = cv2.CascadeCladsassifier("haarcascade_frontalface_default.xml")
+cv2.startWindowThread()
 
-# Limit the frame rate
-fps = 15
-frame_time
-int(1000 / fps)
+picam2 = Picamera2()
+picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
+picam2.start()
 
 while True:
-    # Capture the frame
-    ret, frame = camera.read()
+    im = picam2.capture_array()
+    grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+    faces = face_detector.detectMultiScale(grey, 1.3, 5)
 
-    # Resize the frame
-    frame = imutils.resize(frame, width=320)
+    for (x, y, w, h) in faces:
+        cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0))
 
-    # Convert the frame to grayscale
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    # Apply Gaussian blur
-    blurred = cv2.GaussianBlur(gray, (5, 5), )
-
-    # Detect edges using Canny
-    edged = cv2.Canny(blurred, 30, 150)
-
-    # Find contours
-    contours, _ = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    # Draw contours
-    cv2.drawContours(frame, contours, -1, (0, 255, 0), 2)
-
-    # Show the frame
-    cv2.imshow("Hand Recognition", frame)
-
-    # Check for user input to quit the program
-    key = cv2.waitKey(frame_time) & 0xFF
-    if key == ord("q"):
-        break
-
-# Release the camera and close all windows
-camera.release()
-cv2.destroyAllWindows()
+    cv2.imshow("Camera", im)
